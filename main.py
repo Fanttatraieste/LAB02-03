@@ -274,6 +274,22 @@ def FindPerfectN(n) :
 
     return n
 
+# 15. Find the biggest prime number lower than a given n from the Keyboard
+def FindBigPrime(n):
+    n -= 1
+    while (not CheckPrime(n) and n > 1): n -= 1
+
+    if n == 1 : return -1
+    else : return n
+
+# 16. Find the biggest perfect n lower than a given n from the keyboard
+def FindBigPerfectN(n) :
+    n -= 1
+    while (n > 1 and not CheckPerfect(n)) : n -= 1
+
+    if (n == 1) : return -1
+    return n
+
 if __name__ == '__main__':
     # n1 = int(input("1. We return the first prime number greater then n \n n = "))
     # print("The requested prime number is : ", FindFirstPrime(n1))
@@ -332,7 +348,23 @@ if __name__ == '__main__':
     # n = int(input("n = "))
     # print("The resulult is : ", Exercise13(n))
 
-    print("14. For a given n, find n1 > n, such that n1 is a perfect number")
+    # print("14. For a given n, find n1 > n, such that n1 is a perfect number")
+    # n = int(input("n = "))
+    # print("The result is : ", FindPerfectN(n))
+
+    # print("15. For a given n, find the biggest n1, such that n1 < n and n1 is prime")
+    # n = int(input("n = "))
+    # result = FindBigPrime(n)
+    # if result == -1 :
+    #     print("There is no prime number smaller than your input")
+    # else :
+    #     print("The searched n1 is : ", result)
+
+    print("16. For a given n, find the biggest n1, such that n1 < n and n1 is perfect")
     n = int(input("n = "))
-    print("The result is : ", FindPerfectN(n))
+    result = FindBigPerfectN(n)
+    if result == -1 :
+        print("There is no prime number smaller than your input")
+    else :
+        print("The searched n1 is : ", result)
 
