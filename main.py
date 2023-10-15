@@ -166,15 +166,16 @@ def CheckPrime(x):
     return True
 def CountPrimeDiv(x):
     #     We return the num of prime div of x
+    if (CheckPrime(x)) : return 1
     count = 0
-    for i in range(2, int(sqrt(x))):
+    for i in range(2, int(sqrt(x)) + 1):
         if x % i == 0 :
             if CheckPrime(i) :
                 count += 1
-            if CheckPrime((x/i)):
+            if x/i != i and CheckPrime((x/i)):
                 count += 1
 
-    if (int(sqrt(x)) * int(sqrt(x)) == x and CheckPrime(int(sqrt(x)))) : return count + 1
+    # if (int(sqrt(x)) * int(sqrt(x)) == x and CheckPrime(int(sqrt(x)))) : return count + 1
     return count
 def FindDesired(n,i):
     #   we are searching among n's Prime Divizors, and we return the ith one
@@ -182,7 +183,7 @@ def FindDesired(n,i):
     if (n % 2 == 0) : count = 1
     if (i == 1 and count == 1): return 2
     step = 3
-    while count < i :
+    while count <= i :
         if (n % step == 0 and CheckPrime(step)) : count += 1
         if (count == i): return step
         step += 2
@@ -195,15 +196,83 @@ def FindNthElement(n) :
     count = 3
     step = 4
 
-    while count < n :
+    while count <= n :
         nrDiv = CountPrimeDiv(step)
-        if (count + nrDiv <= n) :
+        if (count + nrDiv >= n) :
             return FindDesired(step, n - count)
         count += nrDiv
         step += 1
 
     return -1
 
+# 13. Find the nth element of the sequence 1,2,3,2,2,5,2,2,3,3,3,7,2,2,3,3,3, ...
+def CountPrimeDiv13(n) :
+    if CheckPrime(n) : return 1;    # if n is prime, then it appears one time in the sequence
+
+    count = 0
+
+    for i in range(2, int(sqrt(n)) + 1):
+        if n % i == 0 :
+            if CheckPrime(i) :
+                count += i  # if i is a prime divizor, then it appears i times in the sequence
+            if n/i != i and CheckPrime((n/i)):
+                count += (n/i)    # analog as for i
+
+    return count
+
+def FindDesired13(n,i):
+    #   we are searching among n's Prime Divizors, and we return the ith one
+    count = 0
+
+    step = 2
+    while count <= i :
+        if (n % step == 0 and CheckPrime(step)) : count += step
+        if (count >= i): return step
+        step += 1
+
+    return step
+
+def Exercise13 (n) :
+    # Ideea exercitiului este ca un numar prim se va repeta o singura data in secventa
+    # Iar un numar compus de ex din i * j isi va repeta fiecare divizor i prim de i ori, j prim de j ori si tot asa
+
+    if (n <= 3) : return n
+
+    count = 3       # count va numara elementele din secventa
+    step = 4        # step va parcurge numerele naturale
+
+    while count <= n :
+        #  In acest while vreau sa parcurg practic sirul format
+        #  Count retine cate elemente am socotit deja
+        #  nrEl calculeaza cate elemente urmeaza sa fie adaugate in sir, pt urm nr natural din secventa
+        nrEl = CountPrimeDiv13(step)    #   nrEl calculeaza cate elemente urmeaza sa fie adaugate in sir conform urmatorului nr natural, fie el prim sau compus
+        if count + nrEl >= n :          # Daca nr de elemente deja socotite, plus nr de el care urm sa fie adaugate depaseste n ( pozitia pe care o caut ), inseamna ca numarul dorit de returnat, se afla printre divizorii urmatorului nr natural, adica step
+            return FindDesired13(step, n - count)    # returnez al i-lea divizor al lui step, i = n - count
+        count += nrEl            # daca am ajuns aici, inseamna ca mai am de parcurs elemente, deci nrEl le contabilizez la el socotite
+        step += 1                # trec la urmatorul nr natural
+
+    return -1                       # in mod normal se face return in while, daca am ajuns aici, cv e gresit
+
+
+# 14. Find n1 > n, n is a given number from the keyboard, where n1 is a perfect number, meaning n1 is the sum of its divizors
+def CheckPerfect(n) :
+    sum = 1
+    for i in range(2, int(sqrt(n)) + 1):
+        if (n % i == 0) :
+            sum += (i + n/i)
+        if (sum > n) :
+            return False
+
+    if (int(sqrt(n)) * int(sqrt(n)) == n) :
+        sum += int(sqrt(n))
+
+    return n == sum
+
+def FindPerfectN(n) :
+    n += 1
+    while (not CheckPerfect(n)) : n += 1
+
+    return n
 
 if __name__ == '__main__':
     # n1 = int(input("1. We return the first prime number greater then n \n n = "))
@@ -255,6 +324,15 @@ if __name__ == '__main__':
     # b = int(input("b = "))
     # print("The result is : ", CheckDigits(a,b))
 
-    print("12. For a given n, we return the nth number of the sequence from ex 12")
+    # print("12. For a given n, we return the nth number of the sequence from ex 12")
+    # n = int(input("n = "))
+    # print("the result is : ", FindNthElement(n))
+
+    # print("13. For a given n, we return the nth number of the sequence from ex 13")
+    # n = int(input("n = "))
+    # print("The resulult is : ", Exercise13(n))
+
+    print("14. For a given n, find n1 > n, such that n1 is a perfect number")
     n = int(input("n = "))
-    print("the result is : ", FindNthElement(n))
+    print("The result is : ", FindPerfectN(n))
+
